@@ -1,0 +1,6 @@
+WHATEVER YOU DO DO NOT EDIT FILES IN THE HOME DIRECTORY
+If you edit any of the files it is very likely that you will break the 
+redeployment script and crash all of the challenges
+
+hostnames for ssh are as follows: random, the_vault, scott-web-challenge, 
+jit-calc, misdirection, nginx-frontend
