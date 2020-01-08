@@ -13,6 +13,11 @@ class InvalidChallengeError(Error):
         self.expression = expression
         self.message = message
 
+class IllegalInputError(Error):
+    def __init__(self, expression, message):
+        self.expression = expression
+        self.message = message
+
 #Function to check if a challenge is up using the solve function and redeploy if it is not
 def check(challenge):
     log.debug("Checking challenge {}".format(challenge.__class__.__name__))
@@ -84,6 +89,8 @@ if __name__ == "__main__":
         if len(challengesList) == 0:
             log.debug("No challenges")
             sys.exit()
+        if args.processes < 1:
+            raise IllegalInputError("Number of processes must be greater than or equal to one")
         pool = mp.Pool(processes=args.processes)
         results = [pool.apply(check, args=(x,)) for x in challengesList]
 
