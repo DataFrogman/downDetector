@@ -35,7 +35,7 @@ class sample(Challenge):
 
     def solve(self):
         try:
-            response = requests.get('http://{}:{}'.format(self.host, self.port))
+            response = requests.get('http://{}:{}'.format(self.host, self.port), timeout=2)
         except:
             return False
         if self.flag in response.text:

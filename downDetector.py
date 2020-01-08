@@ -2,6 +2,7 @@ import sys
 import logging
 import paramiko
 import argparse
+import multiprocessing as mp
 from challenges import *
 
 class Error(Exception):
@@ -21,7 +22,12 @@ def check(challenge):
         log.debug("{} is down".format(challenge.__class__.__name__))
         log.debug("Redeploying {}".format(challenge.__class__.__name__))
         challenge.redeployment()
-        log.info("Redeployed {}".format(challenge.__class__.__name__))
+        log.debug("Redeployed {}".format(challenge.__class__.__name__))
+        log.debug("Verifying redeployment of {}".format(challenge.__class__.__name__))
+        if challenge.solve():
+            log.debug("{} sucessfully redeployed".format(challenge.__class__.__name__))
+        else:
+            log.debug("{} failed to redeploy".format(challenge.__class__.__name__))
 
 if __name__ == "__main__":
 
@@ -30,7 +36,8 @@ if __name__ == "__main__":
     parser.add_argument("-l", "--list", action="store_true", help="List the challenges currently implemented")
     parser.add_argument("-t", "--target", nargs='+', help="Target challenges to test")
     parser.add_argument("-v", "--verbose", action="store_true")
-    parser.add_argument("-f", "--file", help="Log file", default="./downDetector.log") 
+    parser.add_argument("-f", "--file", help="Log file", default="./downDetector.log")
+    parser.add_argument("-p", "--processes", help="Number of processes to use, default=5", default=5, type=int)
     args = parser.parse_args()
     
     # Example implementation of the 'sample' challenge
@@ -77,6 +84,6 @@ if __name__ == "__main__":
         if len(challengesList) == 0:
             log.debug("No challenges")
             sys.exit()
-        for entry in challengesList:
-            check(entry)
+        pool = mp.Pool(processes=args.processes)
+        results = [pool.apply(check, args=(x,)) for x in challengesList]
 

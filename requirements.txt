@@ -1,2 +1,5 @@
 paramiko
 argparse
+multiprocessing
+logging
+sys
