@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+*$py.class
+instance/
+.webassets-cache
+mysql_user_password
+mysql_root_password
+downDetector.log
