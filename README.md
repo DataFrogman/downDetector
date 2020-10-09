@@ -16,7 +16,9 @@ __Install the Requirements:__
 pip3 install -r requirements.txt
 ```
 Install docker and docker-compose:
+
 https://docs.docker.com/get-docker/
+
 https://docs.docker.com/compose/install/
 
 __Set up Password Files__:
