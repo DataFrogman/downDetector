@@ -15,6 +15,15 @@ __Install the Requirements:__
 ```
 pip3 install -r requirements.txt
 ```
+Install docker and docker-compose:
+https://docs.docker.com/get-docker/
+https://docs.docker.com/compose/install/
+
+__Set up Password Files__:
+```
+openssl rand -base64 32 > /mysql_root_password
+openssl rand -base64 32 > secrets/mysql_user_password
+```
 
 __Customize for Challenges__:
 To use in a competition you must build challenge objects in the challenges.py file.  A sample challenge is provided.
