@@ -12,4 +12,9 @@ CREATE TABLE challenges(
 	status BOOLEAN NULL
 );
 
+-- Sample initializer of a challenge in the database
+/*
+INSERT INTO challenges (challengeName, category)
+VALUES ("sampleChallenge", "web");
+*/ 
 
