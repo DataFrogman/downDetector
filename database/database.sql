@@ -15,6 +15,6 @@ CREATE TABLE challenges(
 -- Sample initializer of a challenge in the database
 /*
 INSERT INTO challenges (challengeName, category)
-VALUES ("sampleChallenge", "web");
+VALUES ("sampleChallenge", "sampleCategory");
 */ 
 
