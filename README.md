@@ -15,7 +15,7 @@ __Install the Requirements:__
 ```
 pip3 install -r requirements.txt
 ```
-Install docker and docker-compose:
+__Install docker and docker-compose:__
 
 https://docs.docker.com/get-docker/
 
@@ -41,6 +41,13 @@ and then redeploy it.
 
 Best practices are require your challenge authors to submit their challenges with a `solve` function already made.  Since the 
 `redeployment` function is very hosting solution dependent it should be made by the Competition Architect or competition Black Team.
+
+__Initialize Challenges in database.sql:__
+For each challenge in challenges.py you must add a correlated INSERT statement to the `databse/databse.sql` file.   This insert statement should be formatted as follows:
+```
+INSERT INTO challenges (challengeName, category)
+VALUES ("sampleChallenge", "sampleCategory");
+```
 
 ## Usage
 downDetector is host solution agnostic, the specific implementation of `solve` and `redeployment` should be tailored to your challenges
