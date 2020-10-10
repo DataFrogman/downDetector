@@ -2,7 +2,10 @@ import sys
 import logging
 import paramiko
 import argparse
+import mysql.connector
 import multiprocessing as mp
+import time
+import datetime
 from challenges import *
 
 class Error(Exception):
@@ -18,11 +21,31 @@ class IllegalInputError(Error):
         self.expression = expression
         self.message = message
 
+db_user_pass = ''
+
+#Function to connect to the database
+def connection():
+    conn = mysql.connector.connect(host = "database",
+                  user = 'user',
+                  password = db_user_pass,
+                  database = 'db',
+                  auth_plugin='mysql_native_password')
+
+    c = conn.cursor(buffered=True)
+    return c , conn
+
 #Function to check if a challenge is up using the solve function and redeploy if it is not
 def check(challenge):
+    c, conn = connection()
     log.debug("Checking challenge {}".format(challenge.__class__.__name__))
     if challenge.solve():
         log.debug("{} is up".format(challenge.__class__.__name__))
+        stamp = datetime.strftime('%Y-%m-%d %H:%M:%S')
+        cursor.execute("UPDATE challenges SET status = true, lastCheck = {}, lastUp = {} \
+                WHERE challengeName = {}".format(stamp, stamp, "'"+challenge.__class__.__name__+"'"))
+        cursor.close()
+        conn.commit()
+        conn.close()
     else:
         log.debug("{} is down".format(challenge.__class__.__name__))
         log.debug("Redeploying {}".format(challenge.__class__.__name__))
@@ -35,6 +58,11 @@ def check(challenge):
             log.debug("{} failed to redeploy".format(challenge.__class__.__name__))
 
 if __name__ == "__main__":
+    
+    #Load the db user password
+    passFile = open("secrets/mysql_user_password", "r")
+    db_user_pass = passFile.read()
+    passFile.close()
 
     #Set up the parser
     parser = argparse.ArgumentParser(description="Automatically verify and redeploy implemented challenges")
