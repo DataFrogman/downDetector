@@ -1,0 +1,28 @@
+services:
+    webserver:
+        image: webserver
+        build:
+            context: ./webserver
+            dockerfile: Dockerfile
+        hostname: webserver
+        ports:
+            - "8080:8080"
+        container_name: webserver
+        links:
+            - database
+        depends_on:
+            - database
+    database:
+        image: database
+        build:
+            context: ./database
+            dockerfile: Dockerfile
+        hostname: database
+        ports:
+            - "8081:3306"
+        restart: unless-stopped
+        container_name: database
+        environment:
+            MYSQL_ROOT_PASSWORD: 'samplePassword'
+            MYSQL_DATABASE: db
+        command: --default-authentication-plugin=caching_sha2_password

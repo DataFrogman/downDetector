@@ -1,5 +1,4 @@
 paramiko
 argparse
-multiprocessing
-logging
-sys
+flask
+mysql-connector-python

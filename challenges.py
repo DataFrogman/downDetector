@@ -1,15 +1,19 @@
 import requests
 import paramiko
+from datetime import datetime
 
 class Challenge(object):
 
     def __init__(self, host, name):
         self.host = host
-        self.name = name
+        self.name = name 
 
     def solve(self):
         """This is the solver to check if a challenge is up or vandalized.
         IT MUST BE DEFINED.
+        
+        For the web frontend to work properly this must set self.status to the result of the check before returning.
+        If the check succeeds you must set the self.latestUpTime to the timestamp, format is "YYYY-MM-DD - HH:MM:SS"
 
         Return True if the challenge passes all checks, return False at the first failure
         """
@@ -25,12 +29,12 @@ class Challenge(object):
         raise NotImplementedError("{} has not implemented the 'redeployment' function".format(self.__class__.__name__))
 
 """ Sample implementation for a challenge that is just a webpage with the flag on it
-class sample(Challenge):
+class sampleChallenge(Challenge):
     def __init__(self, host, name, keyfile):
         self.host = host
         self.name = name
         self.flag = "RITSEC{sample}"
-        self.port = 8080
+        self.port = 8084
         self.key = keyfile
 
     def solve(self):
