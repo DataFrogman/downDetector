@@ -21,12 +21,6 @@ https://docs.docker.com/get-docker/
 
 https://docs.docker.com/compose/install/
 
-__Set up Password Files__:
-```
-openssl rand -base64 32 > secrets/mysql_root_password
-openssl rand -base64 32 > secrets/mysql_user_password
-```
-
 __Customize for Challenges__:
 To use in a competition you must build challenge objects in the challenges.py file.  A sample challenge is provided.
 A challenge object requires a name, a host, a `solve` function, and a `redeployment` function.  All challenge objects should be initialized
@@ -49,6 +43,15 @@ INSERT INTO challenges (challengeName, category)
 VALUES ("sampleChallenge", "sampleCategory");
 ```
 
+__Change the Database Password__
+By default the database uses the password `samplePassword` which needs to be changed.
+downDetector.py: in the `connection()` function the password needs to be changed.
+docker-compose.yml: under database the `MYSQL_ROOT_PASSWORD` needs to be changed.
+webserver/app.py: in the `connection()` function the password needs to be changed.
+
+__Expose Webserver to External Network__
+Expose port 8080 to the public so that the status page can be reached by competitors, however, ensure that 8081 is forbidden from external connections but allowed for your host.  If 8081 is exposed publicly then your database is available to the internet.
+
 ## Usage
 downDetector is host solution agnostic, the specific implementation of `solve` and `redeployment` should be tailored to your challenges
 and hosting solution.
@@ -65,6 +68,8 @@ downDetector has multiple options, see below:
 | -p, --processes | Specifies the number of processes to use, defaults to 5 |
 
 If the options -h, -t, or -l are not specified it will run through all initialized challenges.
+
+The database and webserver are started with `docker-compose up -d`.
 
 ## Acknowledgments
 
