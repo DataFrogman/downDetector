@@ -1,3 +1,4 @@
 paramiko
 argparse
 flask
+mysql-connector-python

@@ -1,7 +1,7 @@
 services:
-        webserver:
-                image: webserver
-                        build:
+    webserver:
+        image: webserver
+        build:
             context: ./webserver
             dockerfile: Dockerfile
         hostname: webserver
@@ -19,20 +19,10 @@ services:
             dockerfile: Dockerfile
         hostname: database
         ports:
-            - "8081:3307"
+            - "8081:3306"
+        restart: unless-stopped
         container_name: database
         environment:
-            MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
-            MYSQL_USER_PASSWORD: /run/secrets/mysql_root_password
-            MYSQL_USER: user
+            MYSQL_ROOT_PASSWORD: 'samplePassword'
             MYSQL_DATABASE: db
-        secrets:
-            - mysql_root_password
-            - mysql_user_password
-        volumes:
-            - ./database/database.sql:/docker-entrypoint-initdb.d/database.sql
-secrets:
-  mysql_root_password:
-    file: ./secrets/mysql_root_password
-  mysql_user_password:
-    file: ./secrets/mysql_user_password
+        command: --default-authentication-plugin=caching_sha2_password

@@ -9,12 +9,13 @@ CREATE TABLE challenges(
 	category VARCHAR(128) NOT NULL,
 	lastCheck DATETIME NULL,
 	lastUp DATETIME NULL,
-	status BOOLEAN NULL
+	status BOOLEAN NULL,
+	CONSTRAINT shallenges_pk PRIMARY KEY(challengeID)
 );
 
 -- Sample initializer of a challenge in the database
-/*
+
 INSERT INTO challenges (challengeName, category)
 VALUES ("sampleChallenge", "sampleCategory");
-*/ 
+
 

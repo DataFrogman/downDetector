@@ -23,7 +23,7 @@ https://docs.docker.com/compose/install/
 
 __Set up Password Files__:
 ```
-openssl rand -base64 32 > /mysql_root_password
+openssl rand -base64 32 > secrets/mysql_root_password
 openssl rand -base64 32 > secrets/mysql_user_password
 ```
 

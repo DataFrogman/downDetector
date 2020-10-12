@@ -21,16 +21,14 @@ class IllegalInputError(Error):
         self.expression = expression
         self.message = message
 
-db_user_pass = ''
-
 #Function to connect to the database
 def connection():
-    conn = mysql.connector.connect(host = "database",
-                  user = 'user',
-                  password = db_user_pass,
+    conn = mysql.connector.connect(host = '0.0.0.0',
+                  port = '8081',
+                  user = 'root',
+                  password = 'samplePassword',
                   database = 'db',
-                  auth_plugin='mysql_native_password')
-
+                  auth_plugin='caching_sha2_password')
     c = conn.cursor(buffered=True)
     return c , conn
 
@@ -40,10 +38,12 @@ def check(challenge):
     log.debug("Checking challenge {}".format(challenge.__class__.__name__))
     if challenge.solve():
         log.debug("{} is up".format(challenge.__class__.__name__))
-        stamp = datetime.strftime('%Y-%m-%d %H:%M:%S')
-        cursor.execute("UPDATE challenges SET status = true, lastCheck = {}, lastUp = {} \
-                WHERE challengeName = {}".format(stamp, stamp, "'"+challenge.__class__.__name__+"'"))
-        cursor.close()
+        ts = time.time()
+        stamp = datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+        c.execute("UPDATE challenges SET status = true, lastCheck = {}, lastUp = {} \
+                WHERE challengeName = {}".format("'" + stamp + "'", "'" + stamp + "'",
+                    "'" + challenge.__class__.__name__ + "'"))
+        c.close()
         conn.commit()
         conn.close()
     else:
@@ -54,16 +54,26 @@ def check(challenge):
         log.debug("Verifying redeployment of {}".format(challenge.__class__.__name__))
         if challenge.solve():
             log.debug("{} sucessfully redeployed".format(challenge.__class__.__name__))
+            ts = time.time()
+            stamp = datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+            c.execute("UPDATE challenges SET status = true, lastCheck = {}, lastUp = {} \
+                    WHERE challengeName = {}".format("'" + stamp + "'", "'"+ stamp + "'",
+                        "'" + challenge.__class__.__name__ + "'"))
+            c.close()
+            conn.commit()
+            conn.close()
         else:
             log.debug("{} failed to redeploy".format(challenge.__class__.__name__))
+            ts = time.time()
+            stamp = datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+            c.execute("UPDATE challenges SET status = false, lastCheck = {} \
+                    WHERE challengeName = {}".format("'" + stamp + "'", "'" + challenge.__class__.__name__ + "'"))
+            c.close()
+            conn.commit()
+            conn.close()
 
 if __name__ == "__main__":
     
-    #Load the db user password
-    passFile = open("secrets/mysql_user_password", "r")
-    db_user_pass = passFile.read()
-    passFile.close()
-
     #Set up the parser
     parser = argparse.ArgumentParser(description="Automatically verify and redeploy implemented challenges")
     parser.add_argument("-l", "--list", action="store_true", help="List the challenges currently implemented")
@@ -74,8 +84,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     # Example implementation of the 'sample' challenge
-    #sample = sample('192.168.76.128', 'sample', 'test.pem')
-    #challengesList = [sample]
+    #sampleChallenge = sampleChallenge('127.0.0.1', 'sampleChallenge', 'test.pem')
+    #challengesList = [ sampleChallenge ]
     challengesList = []
     
     #Set up the logger

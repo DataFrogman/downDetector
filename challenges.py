@@ -6,9 +6,7 @@ class Challenge(object):
 
     def __init__(self, host, name):
         self.host = host
-        self.name = name
-        self.status = False
-        self.latestUpTime = "0000-00-00 - 00:00:00" 
+        self.name = name 
 
     def solve(self):
         """This is the solver to check if a challenge is up or vandalized.
@@ -31,27 +29,22 @@ class Challenge(object):
         raise NotImplementedError("{} has not implemented the 'redeployment' function".format(self.__class__.__name__))
 
 """ Sample implementation for a challenge that is just a webpage with the flag on it
-class sample(Challenge):
+class sampleChallenge(Challenge):
     def __init__(self, host, name, keyfile):
         self.host = host
         self.name = name
         self.flag = "RITSEC{sample}"
-        self.port = 8080
+        self.port = 8084
         self.key = keyfile
 
     def solve(self):
         try:
             response = requests.get('http://{}:{}'.format(self.host, self.port), timeout=2)
         except:
-            self.status = False
             return False
         if self.flag in response.text:
-            self.status = True
-            now = datetime.now()
-            self.latestUpTime = now.strftime("%Y-%m-%d - %H:%M:%S")
             return True
         else:
-            self.status = False
             return False
 
     def redeployment(self):
