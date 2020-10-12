@@ -1,0 +1,26 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>downDetector</title>
+	</head>
+	<body>
+		<table border="1" cellpadding="5" cellspacing="5">
+			<tr>
+				<th>Challenge</th>
+				<th>Category</th>
+				<th>Status</th>
+				<th>Last Checked</th>
+				<th>Last Up</th>
+			</tr>
+			{% for row in data %}
+			<tr>
+				<td>{{row[0]}}</td>
+				<td>{{row[1]}}</td>
+				<td>{{row[2]}}</td>
+				<td>{{row[3]}}</td>
+				<td>{{row[4]}}</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</body>
+</html>

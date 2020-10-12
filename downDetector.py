@@ -26,7 +26,7 @@ def connection():
     conn = mysql.connector.connect(host = '0.0.0.0',
                   port = '8081',
                   user = 'root',
-                  password = 'samplePassword',
+                  password = 'samplePassword', #Change to your database password
                   database = 'db',
                   auth_plugin='caching_sha2_password')
     c = conn.cursor(buffered=True)
