@@ -118,11 +118,13 @@ if __name__ == "__main__":
             if len(challengesList) == 0:
                 log.debug("No challenges")
                 sys.exit()
+            temp = False
             for i in challengesList:
                 if i.__class__.__name__ == option:
                     check(i)
-                else:
-                    raise InvalidChallengeError("{} is not a valid challenge".format(option))
+                    temp = True
+            if temp == False:
+                raise InvalidChallengeError("{} is not a valid challenge".format(option))
     else:
         if len(challengesList) == 0:
             log.debug("No challenges")
